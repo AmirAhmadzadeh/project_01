@@ -1,0 +1,72 @@
+
+
+<form action="/admin/posts/create"  method="post" enctype="multipart/form-data">
+  
+   <div class="form-group">
+      <label for="title">Title</label>
+      <input  required type="text" name='title' class="form-control" placeholder="write a title for the post">
+   </div>
+   
+   
+    <div class="form-group" >
+      <label for="file"></label>
+      <input  type="file" name='file' class="form-control" placeholder="put your file here">
+     </div>
+ 
+
+   <div class="form-group">
+      <label for="status">Status</label>
+     <select name="status" id="status" class="form-control">
+         <option value="public">Public</option>
+         <option value="private">Private</option>
+         <option value="draft">Draft</option>
+     </select>
+   </div>
+
+
+<!--
+
+ <div class="form-group">
+      <label for="cat">categories</label>
+     <select name="cat" id="cat" class="form-control">
+          {{#each cats}} 
+            <option value={{_id}}>{{name}}</option>
+           {{/each}}
+     </select>
+  </div>
+
+ -->
+
+<div class="form-check">
+      <label for="cat">categories</label>
+    
+      <div class="form form-area">
+    {{#each cats}}
+         <label for="categoryName">{{name}}</label> 
+         <input type="checkbox" name={{id}} id="">  
+     {{/each}} 
+    
+    </div>
+  </div>
+<hr>
+
+
+
+   <div class="form-check">
+      <label for="allowcomment" class="form-check-label">
+       <input type="checkbox" name="allowcomment" id="allowcomment" class="form-check-input">    
+       Allow Comments</label>
+   </div>
+   
+   <div class="form-group">
+      <label for="body">Body</label>
+      <textarea  required  name="content" class="form-control" placeholder="write Content" id="body" cols="30" rows="10"></textarea> 
+   </div>
+
+   <input type="submit" class="btn btn-primary"  name="submit" value="create post">
+
+
+</form>
+
+
+

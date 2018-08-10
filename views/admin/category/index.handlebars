@@ -1,0 +1,30 @@
+<h1>Categories</h1>
+
+<table border="3px">
+
+    <tr>
+        <th>id</th>
+        <th>name</th>
+       
+    </tr>
+
+    
+    {{#each cats}}
+    <tr>
+        <td>{{_id}}</td>
+        <td>{{name}}</td>
+        <td>
+        </td>
+         <td>
+             <a href="/admin/categories/edit/{{_id}}" class="btn btn-primary"> Edit</a>
+         </td>
+         <td>
+        <form action="/admin/categories/{{_id}}?_method=DELETE" method="post">
+         <input type="submit" value="Delete" class="btn btn-danger">
+        </form>
+        </td>    
+    </tr>
+    {{/each}}
+</table>
+
+<a href="/admin/categories/create">createcat</a>
