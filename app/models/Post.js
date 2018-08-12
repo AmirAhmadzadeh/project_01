@@ -18,7 +18,8 @@ const postSchema = new Schema({
     ,
     content : {
 
-        type : String , required : true 
+        type : String  , required : true
+                      
     }
     ,
     date : {

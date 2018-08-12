@@ -28,9 +28,11 @@
                   <h4>
 											<a href="#">{{title}}</a>
 										</h4>
-                  <p>
-                    {{body}}
-                  </p>
+                 {{#content content=content}}
+               
+                    {{content}}
+
+                 {{/content}}
                 </div>
                 <span>
 										<a href="post/{{id}}" class="ready-btn">Read more</a>

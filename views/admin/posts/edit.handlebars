@@ -1,0 +1,93 @@
+<h1>
+    Edit Post
+</h1>
+
+
+
+<form action="/admin/posts/edit/{{post._id}}?_method=PUT"  method="post" enctype="multipart/form-data">
+  
+   <div class="form-group">
+      <label for="title">Title</label>
+      <input  required type="text" name='title' class="form-control" value="{{post.title}}">
+   </div>
+   
+    
+    <div class="form-group" >
+        {{#if post.file}}
+       <img src="/upload/{{post.file}}" width="100px" height="59px" >
+       <label for="file">choose another one  :</label>
+        {{/if}}
+
+      <input  type="file" name='file' class="form-control" placeholder="put your file here" value={{post.file}}>     
+     </div>
+ 
+
+   <div class="form-group">
+      <label for="status">Status</label>
+     <select name="status" id="status" class="form-control">
+      
+        {{#select selected=post.status}}     
+         <option value="public">Public</option>
+         <option value="private">Private</option>
+         <option value="draft">Draft</option>
+        {{/select}}
+    
+     </select>
+   </div>
+
+
+<div class="form-check">
+      <h3 for="cat">categories</h3>
+     
+      <div class="form form-area">
+    
+     {{! change this part as soon  }}
+
+      <label for="">categories : </label>
+      <br>
+      {{#each post.categories}}
+         <label for="categoryName">{{name}}</label> 
+      {{/each}}
+     <br>
+    
+    
+    <label for="">choose now categories for this post :</label>
+    <br>
+     {{#each cats}}
+         <label for="categoryName">{{name}}</label> 
+         <input type="checkbox" name={{id}}  id="">  
+     {{/each}}   
+    </div>
+  </div>
+<hr>
+
+
+
+   <div class="form-check">
+      <label for="allowcomment" class="form-check-label">
+       <input  {{#if post.allowComments}} checked {{/if}}type="checkbox" name="allowcomment" id="allowcomment" class="form-check-input">    
+       Allow Comments</label>
+   </div>
+   
+   <div class="form-group">
+      <label for="body">Body</label>
+      <textarea name="content" id="area" style="width: 200px;height:100px;">
+
+         {{post.content}}
+       </textarea>
+   </div>
+
+   <input type="submit" class="btn btn-primary"  name="submit" value="Edit-post">
+
+
+</form>
+
+
+
+<script src="/ckeditor/ckeditor.js"></script>
+
+<script>
+
+    CKEDITOR.replace('content') ;
+
+</script>

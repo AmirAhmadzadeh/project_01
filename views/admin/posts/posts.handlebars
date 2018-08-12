@@ -11,6 +11,7 @@
         <th>allowComment</th>
         <th>title</th>
         <th>Delete</th>
+        <th>Edit</th>
     </thead>
     <tbody>
       {{#each posts}}  
@@ -40,6 +41,13 @@
                   </form>  
 
              </td> 
+             <td>
+                 <a href="/admin/posts/edit/{{_id}}" class="btn btn-primary"> Edit </a>
+             </td>
+
+
+
+
        </tr>    
       {{/each}}
 

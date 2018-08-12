@@ -5,7 +5,7 @@ const category =  require('./../../models/Category') ;
 const exvalidator = require('express-validator') ;
 const path = require('path') ;
 const fs = require('fs') ;
-
+const {fileUploadedDirection} = require('./../../helpers/upload-helper') ;
 
 
 router.all('/*',(req,res,next)=>{
@@ -15,53 +15,265 @@ router.all('/*',(req,res,next)=>{
 }) ;
 
 
-//deleting post
+
+// get edit page  
+
+router.get('/edit/:id',(req,res)=>{
+
+    post.findOne({_id : req.params.id})
+         .populate('categories')
+         .then((post) => {
+        category.find({}).then((cats) => {
+        
+        
+            res.render('admin/posts/edit',{ post:post , cats:cats }) ;
+        
+        }) ;
+
+    }).catch((err) => {
+        
+        console.log(`ERROR IN FINDING POST FOR EDIT ${err}`) ;
+    });
+
+
+
+}) ;
+
+
+
+
+// update post
+router.put('/edit/:id',(req,res)=>{
+
+
+        
+    post.findOne({_id : req.params.id}).then((fpost) => {
+     
+     
+        console.log(fpost.categories) ;
+       
+        fpost.categories.forEach(cat=>{
+            
+            category.find({_id : cat}).then((fcat) => {
+                      
+            
+                 for (let index = 0; index < fcat[0].posts.length; index++) {
+                            
+                    if(  fcat[0].posts[index]  == req.params.id ){
+            
+                                     
+                          fcat[0].posts.splice(index) ; 
+                          fcat[0].save().then((result) => {
+                           
+                            console.log("cat saved") ;
+                      
+                        }).catch((err) => {
+                          
+                            console.log("error in cats in deleting posts "  + err ) ;
+                        
+                        }); ; 
+                             
+                       }                   
+                   }       
+                }) ; 
+            }) ;
+
+
+
+       category.find({}).then((cats) => {
+            
+          fpost.categories = [] ; 
+          cats.forEach(function(cat) {       
+               if(req.body[cat._id]){   
+               //   console.log(req.body[cat._id]); 
+                    fpost.categories.push(cat) ; 
+                    cat.posts.push(fpost) ;
+                    cat.save() ;
+
+              }
+          }) ;  
+ 
+    
+      }) ;
+    
+    
+          setTimeout(function() {
+            console.log(fpost.categories) ;
+          }, 10);
+
+    
+    
+        fpost.title = req.body.title ;
+        fpost.content = req.body.content ;
+
+         let ac = false ;
+
+         if(req.body.allowcomment){
+             ac = true ;
+         }
+
+         fpost.allowComments =  ac ;
+
+         fpost.status = req.body.status ;
+
+         // updating file
+
+         let fileName = '' ;
+         if(req.files.file){
+ 
+              let file = req.files.file ;
+              fileName  =   Date.now().toString() + `_` + file.name;
+              
+              file.mv('./public/upload/' + fileName ,(error=>{
+                  if(error){
+                     console.log('Error in uploading file') ;
+                  }
+              })) ;     
+   
+         }
+          
+         fpost.file = fileName ;
+
+        setTimeout(function() {
+           
+                fpost.save().then((result) => {
+                    
+                    post.find({}).then(posts=>{
+                    
+                        res.redirect('/admin/posts') ; 
+                    
+                    }) ;   
+        
+                }).catch((err) => {
+                    
+                    console.log( 'Error in saving post  in editing' + err) ;
+                
+                }) ;
+        
+                }, 100);
+
+            }).catch((err) => {
+            
+            console.log('Error in finding the post in the put for edit' + err)
+        
+         });
+    
+ }) ;
+
+
+
+
+
+
+
+
+
+ //deleting post
 
 router.delete('/delete/:id',(req,res)=>{
-     
     
-    const dir =  "C:\\Users\\HP\\Desktop\\node\\project02\\public\\upload\\" ;
-
+    
     post.findOne({_id : req.params.id}).then(fpost=>{
          
        
-
         if(fpost.file != ''){
 
-            fs.unlink( dir + fpost.file ,(err)=>{
+            fs.unlink( fileUploadedDirection + fpost.file ,(err)=>{
                 
-                if(err) console.log(err)  
+            if(err) console.log(err)  
 
-
+          
+            fpost.categories.forEach(cat=>{
+                
+                category.find({_id : cat}).then((fcat) => {
+                          
+                
+                     for (let index = 0; index < fcat[0].posts.length; index++) {
+                                
+                        if(  fcat[0].posts[index]  == req.params.id ){
+                
+                                         
+                              fcat[0].posts.splice(index) ; 
+                              fcat[0].save().then((result) => {
+                                 // console.log("cat saved") ;
+                              }).catch((err) => {
+                                  console.log("error in cats in deleting posts "  + err ) ;
+                              }); ; 
+                                 
+                             }                   
+                     } 
+                
             fpost.remove()
-            .then(deletedPost=>{
-                
-                console.log('Deleted Successfully') ;
-                return res.redirect('/admin/posts') ; 
+           .then(deletedPost=>{
+                                    
+              console.log('Deleted Successfully') ;
+              return res.redirect('/admin/posts') ; 
+                    
+                }).catch(err=>{
+                            
+            if(err) console.log('Error in  Deleting Post') ;
+                    
+            }) ;
 
-            }).catch(err=>{
-        
-                if(err) console.log('Error in  Deleting Post') ;
+            }).catch((err) => {
+                        console.log("ERROR in deleting posts " + err) ;
+                    
+                    });
 
-            }) ; 
-        });
+                });
+          });
+
+
     }else{
 
 
-    fpost.remove()
-    .then(deletedPost=>{
+        fpost.categories.forEach(cat=>{
+            
+            category.find({_id : cat}).then((fcat) => {
+            
+
+                for (let index = 0; index < fcat[0].posts.length; index++) {
+                    
+                        if(  fcat[0].posts[index]  == req.params.id ){
+
+                            
+                            fcat[0].posts.splice(index) ; 
+                            fcat[0].save().then((result) => {
+                                
+                            }).catch((err) => {
+                                console.log(' error in updating categories in deleting posts' + err) ;
+                            });  ; 
+                    
+                    }                   
+                } 
+
+                fpost.remove()
+                .then(deletedPost=>{
+                    
+                    console.log('Deleted Successfully') ;
+                    return res.redirect('/admin/posts') ; 
+
+                }).catch(err=>{
+            
+                    if(err) console.log('Error in  Deleting Post') ;
+
+                }) ;
+
+            }).catch((err) => {
+                console.log("ERROR in deleting posts " + err) ;
+            
+            });
         
-        console.log('Deleted Successfully') ;
-        return res.redirect('/admin/posts') ; 
 
-    }).catch(err=>{
+        });
 
-        if(err) console.log('Error in  Deleting Post') ;
+      }
+ }); 
 
-    }) ; 
 
-   }
- });
+
+
+
 }) ;
 
 
@@ -87,21 +299,22 @@ router.post('/create',(req,res)=>{
         cats.forEach(function(cat) {
              
              if(req.body[cat._id]){   
-                console.log(req.body[cat._id]); 
+             //   console.log(req.body[cat._id]); 
                 newpost.categories.push(cat) ;      
+                cat.posts.push(newpost) ;
+                cat.save() ;
             }
         }) ;  
 
         newpost.save() ;
       }) ;
 
-  
 
         
      //validation 
        const title = req.body.title ;
        const content = req.body.content ;   
-
+       
      // console.log(title,content) ; 
 
 
@@ -110,17 +323,17 @@ router.post('/create',(req,res)=>{
 
        const err = req.validationErrors();
        if(err) {
-         //  console.log('valid info for creating the Post') ;
+        
            return res.redirect('/admin/posts/create') ;
        }
     
-     //creating :
+      //creating 
      
      let allowcomment = false ;
      if(req.body.allowcomment) allowcomment = true ;
      
      
-      // Upload
+        // Upload
       
         let fileName = '' ;
         if(req.files.file){
@@ -149,16 +362,20 @@ router.post('/create',(req,res)=>{
     
         
 
-     newpost.save().then((result) => {
+     setTimeout(function() {
      
-        console.log('Created') ;
-         res.redirect('/admin/posts/posts') ;
-   
-      }).catch((err) => {
-   
-            console.log('Error' + err)  ;
-     }); 
+        newpost.save().then((result) => {
+            
+               console.log('Created') ;
+                res.redirect('/admin/posts/posts') ;
+          
+             }).catch((err) => {
+          
+                   console.log('Error' + err)  ;
+            }); 
+       
 
+      },100);
 }) ;
 
 

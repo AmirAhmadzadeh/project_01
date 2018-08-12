@@ -30,9 +30,9 @@
                       <a href="#">
 												   <img src="/upload/{{file}}" alt="">
 												</a>
-                    </div>
+                    </div> 
                     <div class="pst-content">
-                      <p><a href="post/{{_id}}"> Redug Lerse dolor sit amet consect adipis elit.</a></p>
+                      <p><a href="/post/{{_id}}"><strong>{{title}}</strong> {{#content content=content}} {{/content}} </a></p>
                     </div>
                   </div>
                   {{/each}}
@@ -49,7 +49,7 @@
                 <h4>categories</h4>
                   <ul>
                     {{#each cats}}  
-                    <li><a href="">{{name}}</a></li>
+                    <li><a href="/catPosts/{{_id}}">{{name}}</a></li>
                     {{/each}}
                   </ul>
               </div>
