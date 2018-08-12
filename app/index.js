@@ -3,7 +3,7 @@ const mongoose = require('mongoose') ;
 const exhandlebars = require('express-handlebars') ;
 const bodyParser = require('body-parser') ;
 const expressValidator = require('express-validator');
-const {generateTime} = require('./helpers/helper-handlebars') ;
+const {generateTime,select,check,content} = require('./helpers/helper-handlebars') ;
 const expresUpload = require('express-fileupload') ;
 const methodOverRide =  require('method-override') ;
 const http = require('http') ;
@@ -19,7 +19,6 @@ module.exports = class Application {
       this.setMongo() ;
       this.setConfig() ;
       this.setTemplateEngine();
-    
       this.setrouteMiddlewares();
 
    }
@@ -29,7 +28,7 @@ module.exports = class Application {
 
      const server = http.createServer(app) ;
      const port = process.env.PORT || 3000 ;
-      server.listen(port, (err)=>{
+     server.listen(port, (err)=>{
 
         if(err) console.log('Error in creating server ') ;
         else {
@@ -94,10 +93,15 @@ module.exports = class Application {
 
      app.engine('handlebars' , exhandlebars({helpers : {
 
-      generateTime : generateTime 
+      generateTime : generateTime
+      ,
+      select : select  ,
+      check : check ,
+      content : content
 
     }}));
      app.set('view engine','handlebars') ;
+
   }
   
   setrouteMiddlewares(){
