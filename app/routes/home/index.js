@@ -1,10 +1,6 @@
-
-
 /**
  *  home main  router :
  */
-
-
 const express = require('express') ;
 const router = express.Router();
 const post = require('./../../models/Post') ;
@@ -69,10 +65,6 @@ router.post('/Comment/:id',(req,res)=>{
 
 
 }) ;
-
-
-
-
 
 
 
@@ -239,26 +231,24 @@ router.post('/register',(req,res)=>{
 
 router.get('/catPosts/:id',(req,res)=>{
 
-    let posts = [] ;
-     cats.find({_id : req.params.id}).then((cat) => {
+     let posts = [] ;
+     cats.findOne({_id : req.params.id}).then((cat) => {
          
-        catposts = cat[0].posts ;
-        catposts.forEach(function(element) {
-
-               post.findOne({_id : element}).then((fpost) => {
-                   posts.push(fpost) ;
-                   console.log("pushed") ;
-                                      
-               }).catch((err) => {
-                   console.log('Error in showing all posts of a category') ;
-
-               });
-
-
-        }, this);
-
+        for(let postId of cat.posts){
         
+            post.findOne({_id : postId}).then((fpost) => {
+              
+                if(fpost.status == 'public')   posts.push(fpost) ;
+                                   
+            }).catch((err) => {
+               
+                console.log('Error in showing all posts of a category') ;
 
+            });
+
+
+        } 
+        
         
      }).catch((err) => {
          console.log(`Error in cat Posts  ${err}`) ;
@@ -268,19 +258,16 @@ router.get('/catPosts/:id',(req,res)=>{
     cats.find({}).then((cats) => {
         
         setTimeout(function() {
+
             res.render('home/home',{posts:posts,cats:cats})  ;
-        }, 100);
-          
+        }, 100);    
     }).catch((err) => {
         
     });
-
-
 }) ;
 
 router.get('/about',(req,res)=>{
  
-    
        const promises = [
            cats.find(),
            post.find()
@@ -294,14 +281,17 @@ router.get('/about',(req,res)=>{
 
 }) ;
 
+
+// home
 router.get('/',(req,res)=>{
     
-    post.find({}).then((fposts) => {
+    post.find({status : 'public'}).then((fposts) => {
         cats.find({}).then((cats) => {
-        
-            res.render('home/home',{posts : fposts ,cats :cats}) ;
             
-        })
+    
+             res.render('home/home',{posts : fposts ,cats :cats}) ;
+            
+        }) ;
         
     }).catch((err) => {
         
@@ -316,23 +306,20 @@ router.get('/post/:id',(req,res)=>{
    
      const promises = [
         cats.find(),
-
         post.find(),
-
         post
         .findOne({_id : req.params.id})
         .populate({path:'comments', populate:{path:'user'}})
         .populate('user')
+
     ];
 
    Promise.all(promises).then(([cats,posts,post])=>{
-
-     res.render('home/single',{cats:cats,posts : posts , post :post  }) ;
-
-   }) ;
-
-
-
+   
+      let num_cm = post.comments.length ;  
+      res.render('home/single',{cats:cats,posts : posts , post :post ,commment_counter:num_cm }) ;
+ 
+    }) ;
 }) ;
 
 

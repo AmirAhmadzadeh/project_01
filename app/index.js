@@ -1,16 +1,21 @@
+/**
+ * 
+ * Application 
+ */
+
+
 const express = require('express') ;
 const mongoose = require('mongoose') ;
 const exhandlebars = require('express-handlebars') ;
 const bodyParser = require('body-parser') ;
 const expressValidator = require('express-validator');
-const {generateTime,select,check,content} = require('./helpers/helper-handlebars') ;
+const {generateTime,select,check,content_summery_side,content_summery_posts,content,cm_counter} = require('./helpers/helper-handlebars') ;
 const expresUpload = require('express-fileupload') ;
 const methodOverRide =  require('method-override') ;
 const http = require('http') ;
 const session = require('express-session') ;
 const passport = require('passport') ;
 const cookieParser = require('cookie-parser') ;
-
 
 
 
@@ -121,10 +126,13 @@ module.exports = class Application {
 
       generateTime : generateTime
       ,
-      select : select  ,
-      check : check ,
-      content : content
-
+       select : select  ,
+       check : check ,
+       content_summery_side : content_summery_side ,
+       content_summery_posts: content_summery_posts,
+       content : content,
+       cm_counter :cm_counter 
+     
     }}));
      app.set('view engine','handlebars') ;
 
