@@ -54,7 +54,7 @@ module.exports = class Application {
 
    setMongo(){
 
-      mongoose.connect('mongodb://localhost:27017/project02' , (err=>{
+      mongoose.connect( process.env.MONGODB_URI || 'mongodb://localhost:27017/project02' , (err=>{
         
               if(err)  console.log("Error in connection to the database");
       
