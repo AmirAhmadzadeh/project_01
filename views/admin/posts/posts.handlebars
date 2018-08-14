@@ -11,6 +11,8 @@
         <th>date</th>
         <th>allowComment</th>
         <th>title</th>
+        <th>view
+        </th>
         <th>Delete</th>
         <th>Edit</th>
     </thead>
@@ -32,24 +34,20 @@
                      </li>
                       {{/each}}  
                  </ul>
-            
+
             </td> 
              <td>{{generateTime date}}</td>
              <td>{{allowComments}}</td>
              <td>{{title}}</td>
+            <td><a href="/post/{{_id}}" class="btn"> view </a> </td>
              <td>
                   <form action="/admin/posts/delete/{{_id}}?_method=DELETE" method="post">
                       <input value="Delete"  type="submit" name="delete" class="btn btn-danger"  >    
                   </form>  
-
              </td> 
              <td>
                  <a href="/admin/posts/edit/{{_id}}" class="btn btn-primary"> Edit </a>
              </td>
-
-
-
-
        </tr>    
       {{/each}}
 

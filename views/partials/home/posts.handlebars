@@ -1,11 +1,10 @@
   <!-- Start single blog -->
       
       
-    
-      
+
     
         <div class="col-md-8 col-sm-8 col-xs-12">
-          
+        
          {{#each posts}}
           <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -18,7 +17,7 @@
                 <div class="blog-meta">
                   <span class="comments-type">
 											<i class="fa fa-comment-o"></i>
-											<a href="#">11 comments</a>
+											<a href="#"> {{#if this}} {{#cm_counter post=this }} {{/cm_counter}} {{/if}} comments</a>
 										</span>
                   <span class="date-type">
 											<i class="fa fa-calendar"></i>{{generateTime date}}
@@ -28,30 +27,20 @@
                   <h4>
 											<a href="#">{{title}}</a>
 										</h4>
-                 {{#content content=content}}
-               
-                    {{content}}
-
-                 {{/content}}
-                </div>
+                 {{#content_summery_posts content=this.content}}  {{/content_summery_posts}}
+                 </div>
+            
+            
                 <span>
 										<a href="post/{{id}}" class="ready-btn">Read more</a>
-									
                 </span>
           
               </div>
-           
-            {{/each}}
-           
-            </div>
     
+            {{/each}}
+            </div>
+  
             <!-- End single blog -->
-
-
-
-
-           
-
             <div class="blog-pagination">
               <ul class="pagination">
                 <li><a href="#">&lt;</a></li>

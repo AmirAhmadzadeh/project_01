@@ -31,10 +31,17 @@
 												   <img src="/upload/{{file}}" alt="">
 												</a>
                     </div> 
-                    <div class="pst-content">
-                      <p><a href="/post/{{_id}}"><strong>{{title}}</strong> {{#content content=content}} {{/content}} </a></p>
-                    </div>
+            
+                  <div class="pst-content">
+               
+                      <p><a href="/post/{{_id}}"><strong>{{title}}</strong> <br>
+                       {{#content_summery_side content=this.content}}{{/content_summery_side}} </a></p>
+                      </div>
+                 
                   </div>
+               
+               
+               
                   {{/each}}
                   <!-- End single post -->
 
