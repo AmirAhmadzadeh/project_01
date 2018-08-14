@@ -229,42 +229,6 @@ router.post('/register',(req,res)=>{
 }) ;
 
 
-router.get('/catPosts/:id',(req,res)=>{
-
-     let posts = [] ;
-     cats.findOne({_id : req.params.id}).then((cat) => {
-         
-        for(let postId of cat.posts){
-        
-            post.findOne({_id : postId}).then((fpost) => {
-              
-                if(fpost.status == 'public')   posts.push(fpost) ;
-                                   
-            }).catch((err) => {
-               
-                console.log('Error in showing all posts of a category') ;
-
-            });
-
-
-        } 
-        
-        
-     }).catch((err) => {
-         console.log(`Error in cat Posts  ${err}`) ;
-     });
-    
- 
-    cats.find({}).then((cats) => {
-        
-        setTimeout(function() {
-
-            res.render('home/home',{posts:posts,cats:cats})  ;
-        }, 100);    
-    }).catch((err) => {
-        
-    });
-}) ;
 
 router.get('/about',(req,res)=>{
  

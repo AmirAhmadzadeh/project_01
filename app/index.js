@@ -153,10 +153,15 @@ module.exports = class Application {
 
     // router middlewares  : 
     app.use('/',require('./routes/home/index'));
+    app.use('/catPosts',require('./routes/home/category')) ;
     app.use('/admin',require('./routes/admin/index'));
     app.use('/admin/posts',require('./routes/admin/posts'));    
     app.use('/admin/categories',require('./routes/admin/cat'))
     app.use('/admin/comments',require('./routes/admin/comments')) ;
+
+
+
+
   }
 
 
