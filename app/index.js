@@ -7,6 +7,12 @@ const {generateTime,select,check,content} = require('./helpers/helper-handlebars
 const expresUpload = require('express-fileupload') ;
 const methodOverRide =  require('method-override') ;
 const http = require('http') ;
+const session = require('express-session') ;
+const passport = require('passport') ;
+const cookieParser = require('cookie-parser') ;
+
+
+
 
 const app = express() ;
 
@@ -18,6 +24,7 @@ module.exports = class Application {
       this.setexpress()  ;
       this.setMongo() ;
       this.setConfig() ;
+      this.setOtherMiddlewares() ;
       this.setTemplateEngine();
       this.setrouteMiddlewares();
 
@@ -85,7 +92,26 @@ module.exports = class Application {
           
           //method Over Ride
           app.use(methodOverRide('_method')) ;
+
+
+          // cookie-parser
+          app.use(cookieParser()) ;
+
+
+          //session 
+
+          app.use(session({
+            
+              secret:"Amir" , resave:true  ,saveUninitialized : true    
+
+          })) ;
+          app.use(session()) ;
  
+         // passport : 
+
+            app.use(passport.initialize()) ;
+            app.use(passport.session()) ;
+
   }
 
 
@@ -103,6 +129,17 @@ module.exports = class Application {
      app.set('view engine','handlebars') ;
 
   }
+
+  setOtherMiddlewares(){
+
+
+      app.use((req,res,next)=>{
+
+       res.locals.user = req.user || null ;
+        next() ;
+      }) ;
+
+  } 
   
   setrouteMiddlewares(){
 
@@ -111,7 +148,7 @@ module.exports = class Application {
     app.use('/admin',require('./routes/admin/index'));
     app.use('/admin/posts',require('./routes/admin/posts'));    
     app.use('/admin/categories',require('./routes/admin/cat'))
- 
+    app.use('/admin/comments',require('./routes/admin/comments')) ;
   }
 
 
