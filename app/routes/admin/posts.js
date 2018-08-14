@@ -2,6 +2,7 @@ const express = require('express') ;
 const router = express.Router();
 const post = require('./../../models/Post') ;
 const category =  require('./../../models/Category') ;
+const comments = require('./../../models/Comment') ;
 const exvalidator = require('express-validator') ;
 const path = require('path') ;
 const fs = require('fs') ;
@@ -202,6 +203,22 @@ router.delete('/delete/:id',(req,res)=>{
                                  
                              }                   
                      } 
+
+
+            fpost.comments.forEach(comment=>{
+            
+                comments.findOne({_id : comment}).then((fcomment) => {
+                    
+                    fcomment.remove().then((deletedcomment) => {
+                        
+                    })
+
+                }).catch((err) => {
+                    console.log('Error finding Comment in deleting Post');
+                });
+
+            }) ;         
+
                 
             fpost.remove()
            .then(deletedPost=>{
@@ -247,6 +264,21 @@ router.delete('/delete/:id',(req,res)=>{
                     }                   
                 } 
 
+
+                fpost.comments.forEach(comment=>{
+
+                    comments.findOne({_id : comment}).then((fcomment) => {
+                        
+                        fcomment.remove().then((deletedcomment) => {
+                            
+                        })
+
+                    }).catch((err) => {
+                        console.log('Error finding Comment in deleting Post');
+                    });
+
+                }) ;
+
                 fpost.remove()
                 .then(deletedPost=>{
                     
@@ -258,6 +290,16 @@ router.delete('/delete/:id',(req,res)=>{
                     if(err) console.log('Error in  Deleting Post') ;
 
                 }) ;
+
+
+
+
+
+
+
+
+
+
 
             }).catch((err) => {
                 console.log("ERROR in deleting posts " + err) ;
@@ -347,7 +389,7 @@ router.post('/create',(req,res)=>{
                  }
              })) ;     
   
-       }
+        }
 
       const newpost = new post({
         
@@ -356,6 +398,7 @@ router.post('/create',(req,res)=>{
                  allowComments:allowcomment
                  ,file : fileName 
                 ,status:req.body.status
+                ,user:req.user
         
          }); 
 
@@ -385,6 +428,7 @@ router.get('/posts',(req,res)=>{
      
     post.find({})
         .populate('categories')
+        .populate({path:'user'})
         .then(fposts=>{    
 
             res.render('admin/posts/posts',{posts : fposts}) ;   
