@@ -26,9 +26,6 @@ router.all('/*',(req,res,next)=>{
 router.post('/Comment/:id',(req,res)=>{
    post.findOne({_id:req.params.id}).then((fpost) => {
        
-
-    
-
     const newComment =new Comment({
         
                  user:req.user ,
@@ -280,8 +277,28 @@ router.get('/post/:id',(req,res)=>{
 
    Promise.all(promises).then(([cats,posts,post])=>{
    
-      let num_cm = post.comments.length ;  
-      res.render('home/single',{cats:cats,posts : posts , post :post ,commment_counter:num_cm }) ;
+      let num_cm = 0 ;  
+ 
+ 
+     for(let p_cm of post.comments){
+
+         Comment.findOne({_id : p_cm }).then((comment) => {
+             
+            if(comment.status){ 
+ 
+                num_cm +=1   
+              }
+
+         }).catch((err) => {
+            
+            console.log(`Error in findin comment in the loop ingeting single post data ${err}`) ;
+        
+        });
+      }
+
+     setTimeout(function() {
+        res.render('home/single',{cats:cats,posts : posts , post :post ,commment_counter:num_cm }) ;
+     }, 1000);
  
     }) ;
 }) ;

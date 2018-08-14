@@ -40,11 +40,13 @@
               <div class="single-post-comments">
                 <div class="comments-area">
                   <div class="comments-heading">
-                    <h3>{{commment_counter}}comments</h3>
+                    <h3>{{commment_counter}} comments</h3>
                   </div>
                   <div class="comments-list">
                     <ul>
                     {{#each post.comments}}
+                     {{#if this.status}} 
+                    
                         <li class="threaded-comments">
                         <div class="comments-details">
                           <div class="comments-list-img">
@@ -61,6 +63,8 @@
                           </div>
                         </div>
                       </li>
+                     
+                     {{/if}}
                   {{/each}}
                     </ul>
                   </div>

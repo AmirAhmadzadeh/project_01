@@ -34,6 +34,7 @@ router.delete('/remove/:id',(req,res)=>{
                         console.log("yes") ;
 
                         fpost.comments.splice(index) ;
+                     
                         fpost.save();
                         
                         fcomment.remove().then((result) => {
@@ -53,32 +54,49 @@ router.delete('/remove/:id',(req,res)=>{
               
            });  
 
-
-
-
-
-
-
-
-
-
      }).catch((err) => {
-        
-        
+           
      });
-
-
-} )
+});
 
 
 
 
+router.get('/status/:id',(req,res)=>{
+    
+    
+      comments.findOne({_id : req.params.id }).then((fcomment) => {
+          
+                if(fcomment.status){
+
+                    fcomment.status = false ;
+                    fcomment.save() ;
+                    return res.redirect('/admin/comments') ;
+                } else{
+
+                    fcomment.status =  true ;
+                    fcomment.save() ;
+                    return res.redirect('/admin/comments') ;
+                }
+
+      }).catch((err) => {
+        
+         console.log( ` Error in finding commment for changing status  ${err} `) ;
+      });
+       
+     
+  
+  
+  })
+  
+  
+  
 
 router.get('/',(req,res)=>{
   
      comments.find({})
       .populate({path:'user'})
-     .then((fcomments) => {
+      .then((fcomments) => {
          
 
         res.render('admin/comments/comments',{comments:fcomments}) ;
