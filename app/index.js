@@ -72,10 +72,9 @@ module.exports = class Application {
           // body-parser middlewares :
           app.use(bodyParser.json());
           app.use(bodyParser.urlencoded({extended:true})) ;
-
           // middleware for validation
           app.use(expressValidator({
-            
+       
               errorFormatter: function(param, msg, value) {
                   let namespace = param.split('.')
                       , root    = namespace.shift()
@@ -163,8 +162,6 @@ module.exports = class Application {
 
 
   }
-
-
 
 }
 
