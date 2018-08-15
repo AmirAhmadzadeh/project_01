@@ -3,7 +3,6 @@
  * Application 
  */
 
-
 const express = require('express') ;
 const mongoose = require('mongoose') ;
 const exhandlebars = require('express-handlebars') ;
@@ -16,7 +15,7 @@ const http = require('http') ;
 const session = require('express-session') ;
 const passport = require('passport') ;
 const cookieParser = require('cookie-parser') ;
-
+const flash = require('connect-flash') ;
 
 
 const app = express() ;
@@ -99,23 +98,24 @@ module.exports = class Application {
 
 
           // cookie-parser
-          app.use(cookieParser()) ;
+           app.use(cookieParser()) ;
 
 
           //session 
 
-          app.use(session({
+            app.use(session({
             
-              secret:"Amir" , resave:true  ,saveUninitialized : true    
+            secret:"Amir" , resave:true  ,saveUninitialized : true    
 
-          })) ;
-          app.use(session()) ;
+            })) ;
+          
+            app.use(session()) ;
  
          // passport : 
 
-            app.use(passport.initialize()) ;
-            app.use(passport.session()) ;
-
+           app.use(passport.initialize()) ;
+           app.use(passport.session()) ;
+        
   }
 
 

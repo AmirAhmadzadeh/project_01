@@ -279,28 +279,27 @@ router.get('/post/:id',(req,res)=>{
    
       let num_cm = 0 ;  
  
- 
+     
+      if (post) {
+          
      for(let p_cm of post.comments){
-
-         Comment.findOne({_id : p_cm }).then((comment) => {
-             
-            if(comment.status){ 
- 
-                num_cm +=1   
-              }
-
-         }).catch((err) => {
-            
-            console.log(`Error in findin comment in the loop ingeting single post data ${err}`) ;
         
-        });
+                 Comment.findOne({_id : p_cm }).then((comment) => {
+                     
+                    if(comment.status){ 
+         
+                        num_cm +=1   ;
+                      }
+        
+                 }).catch((err) => {
+                    
+                    console.log(`Error in findin comment in the loop ingeting single post data ${err}`) ;
+                
+                 });
+               }     
       }
-
-     setTimeout(function() {
-        res.render('home/single',{cats:cats,posts : posts , post :post ,commment_counter:num_cm }) ;
-     }, 1000);
- 
-    }) ;
+       res.render('home/single',{cats:cats,posts : posts , post :post ,commment_counter:num_cm }) ; 
+    }).catch(err=>{console.log('Error in bringing single Post '  + err)}) ;
 }) ;
 
 

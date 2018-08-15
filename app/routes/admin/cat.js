@@ -37,52 +37,22 @@ router.delete('/:id',(req,res)=>{
         
 
         console.log(`category deleted successfuly `) ;
+    
+        Post.findOneAndUpdate({categories:req.params.id},{$pull:{categories:req.params.id}},
+            
+            (err)=>{
+            
+                 if(err) console.log('Error in updating categories of a post') ;
+            
+                }) ;
 
+         res.redirect('/admin/categories')   ;
 
-    }).catch((err) => {
+        }).catch((err) => {
    
         console.log(`Error in deleting category ${err} ` ) ;
    
     });
-    
-
-    Post.find({}).then((posts) => {
-        
-     posts.forEach(post=>{
- 
- 
-          console.log(post.categories) ;
-       
- 
-          for (var index = 0; index < post.categories.length; index++) {
-             
- 
-             console.log(post.categories[index]) ;
- 
-             if(post.categories[index] == req.params.id){
- 
-                 console.log('founded   :D ') ;
-                 post.categories.splice(index) ;
-
-                 cat.find({}).then((cats) => {
-                     
-                    return res.render('admin/category/index',{cats:cats}) ; 
-              
-                }) ;
- 
-             }
-              
-          }
- 
-     }) ;
- 
- 
-    }).catch((err) => {
-        
-        console.log('Error in finding posty for splicing special category' + err) ;
-    });
-
- 
 
 }) ; 
 

@@ -6,7 +6,7 @@
 const express = require('express') ;
 const router = express.Router();
 const post  = require('./../../models/Post') ;
-const comments = require('./../../models/Comment') ;
+const Comments = require('./../../models/Comment') ;
 
 router.all('/*',(req,res,next)=>{
     
@@ -19,44 +19,33 @@ router.all('/*',(req,res,next)=>{
 router.delete('/remove/:id',(req,res)=>{
 
     
-     comments.findOne({_id:req.params.id}).then((fcomment) => {        
+     Comments.remove({_id:req.params.id}).then((deletedComment) => {        
          
-        //  console.log(fcomment.post) ;
-          post.findOne({ _id:fcomment.post }).then((fpost) => {
-              
-             // console.log(fpost.comments);
-               for (var index = 0; index < fpost.comments.length; index++) {
-                   
-                  //  console.log(fpost.comments[index] );
-                      
-                      if(fpost.comments[index] == req.params.id){
+    
 
-                        console.log("yes") ;
 
-                        fpost.comments.splice(index) ;
-                     
-                        fpost.save();
-                        
-                        fcomment.remove().then((result) => {
-                            
+       post.findOneAndUpdate({
 
-                            return res.redirect('/admin/comments') ;
+        comments : req.params.id 
+       },
+       {
+           $pull:{comments:req.params.id}
+       },(err)=>{
 
-                        }).catch((err) => {
-                            
-                            console.log("Error in removing comment" + err) ;
-                        });
+           if(err) console.log('Error in deleting Comment from the post') ;
 
-                      }                     
-               } 
+     
+        }
+     
+      ) ;
 
-           }).catch((err) => {
-              
-           });  
+      res.redirect('/admin/comments') ;  
 
      }).catch((err) => {
-           
-     });
+
+        console.log("Error in removing comment 0" + err) ;
+    
+    });
 });
 
 
@@ -65,7 +54,7 @@ router.delete('/remove/:id',(req,res)=>{
 router.get('/status/:id',(req,res)=>{
     
     
-      comments.findOne({_id : req.params.id }).then((fcomment) => {
+      Comments.findOne({_id : req.params.id }).then((fcomment) => {
           
                 if(fcomment.status){
 
@@ -94,7 +83,7 @@ router.get('/status/:id',(req,res)=>{
 
 router.get('/',(req,res)=>{
   
-     comments.find({})
+     Comments.find({})
       .populate({path:'user'})
       .then((fcomments) => {
          
@@ -107,23 +96,8 @@ router.get('/',(req,res)=>{
      
     });
   
-   
-
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router ;
     

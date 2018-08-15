@@ -173,149 +173,49 @@ router.put('/edit/:id',(req,res)=>{
 
 router.delete('/delete/:id',(req,res)=>{
     
-    
-    post.findOne({_id : req.params.id}).then(fpost=>{
-         
-       
-        if(fpost.file != ''){
 
-            fs.unlink( fileUploadedDirection + fpost.file ,(err)=>{
-                
-            if(err) console.log(err)  
-
-          
-            fpost.categories.forEach(cat=>{
-                
-                category.find({_id : cat}).then((fcat) => {
-                          
-                
-                     for (let index = 0; index < fcat[0].posts.length; index++) {
-                                
-                        if(  fcat[0].posts[index]  == req.params.id ){
-                
-                                         
-                              fcat[0].posts.splice(index) ; 
-                              fcat[0].save().then((result) => {
-                                 // console.log("cat saved") ;
-                              }).catch((err) => {
-                                  console.log("error in cats in deleting posts "  + err ) ;
-                              }); ; 
-                                 
-                             }                   
-                     } 
-
-
-            fpost.comments.forEach(comment=>{
-            
-                comments.findOne({_id : comment}).then((fcomment) => {
-                    
-                    fcomment.remove().then((deletedcomment) => {
-                        
-                    })
-
-                }).catch((err) => {
-                    console.log('Error finding Comment in deleting Post');
-                });
-
-            }) ;         
-
-                
-            fpost.remove()
-           .then(deletedPost=>{
-                                    
-              console.log('Deleted Successfully') ;
-              return res.redirect('/admin/posts') ; 
-                    
-                }).catch(err=>{
-                            
-            if(err) console.log('Error in  Deleting Post') ;
-                    
-            }) ;
-
-            }).catch((err) => {
-                        console.log("ERROR in deleting posts " + err) ;
-                    
-                    });
-
-                });
-          });
-
-
-    }else{
-
-
-        fpost.categories.forEach(cat=>{
-            
-            category.find({_id : cat}).then((fcat) => {
-            
-
-                for (let index = 0; index < fcat[0].posts.length; index++) {
-                    
-                        if(  fcat[0].posts[index]  == req.params.id ){
-
-                            
-                            fcat[0].posts.splice(index) ; 
-                            fcat[0].save().then((result) => {
-                                
-                            }).catch((err) => {
-                                console.log(' error in updating categories in deleting posts' + err) ;
-                            });  ; 
-                    
-                    }                   
-                } 
-
-
-                fpost.comments.forEach(comment=>{
-
-                    comments.findOne({_id : comment}).then((fcomment) => {
-                        
-                        fcomment.remove().then((deletedcomment) => {
-                            
-                        })
-
-                    }).catch((err) => {
-                        console.log('Error finding Comment in deleting Post');
-                    });
-
-                }) ;
-
-                fpost.remove()
-                .then(deletedPost=>{
-                    
-                    console.log('Deleted Successfully') ;
-                    return res.redirect('/admin/posts') ; 
-
-                }).catch(err=>{
-            
-                    if(err) console.log('Error in  Deleting Post') ;
-
-                }) ;
-
-
-
-
-
-
-
-
-
-
-
-            }).catch((err) => {
-                console.log("ERROR in deleting posts " + err) ;
-            
-            });
+    post.findOne()
+        .populate('comments')
+        .then((fpost) => {
         
-
-        });
-
-      }
- }); 
+      fs.unlink(fileUploadedDirection + fpost.file,(err)=>{
 
 
+           if(err) console.log('Error in deleting file of that post' + err) ; 
+
+           for(let cm of fpost.comments){
+
+                cm.remove().then((result) => {
+                    
+                }).catch((err) => {
+                    console.log('Error in deleting Comments of a deleted Post ')
+                }); ;
+           
+            }               
+
+            fpost.remove().then((result) => {
+                
+                 console.log('post deleted') ;
+                 res.redirect('/admin/posts') ;
+            }).catch((err) => {
+             
+                console.log('Error in deleting Post' + err) ;
+          
+            });
+      }) ;
+  
+
+    }).catch((err) => {
+        
+    });
+
+   
 
 
 
+
+         
+    
 }) ;
 
 
