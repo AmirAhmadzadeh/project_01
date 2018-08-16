@@ -40,16 +40,38 @@
             {{/each}}
             </div>
   
+
+
+
+
             <!-- End single blog -->
             <div class="blog-pagination">
+  
+  
               <ul class="pagination">
-                <li><a href="#">&lt;</a></li>
-                <li class="active"><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">&gt;</a></li>
+  
+  
+                  
+                 {{#paginate current=current  pages=pages}}{{/paginate}}
+               
+              
+  
+  
               </ul>
+  
+  
+  
+  
             </div>
+
+
+
+
+
+
+
+
+
           </div>
         </div>
       </div>

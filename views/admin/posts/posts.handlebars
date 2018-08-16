@@ -20,8 +20,8 @@
       {{#each posts}}  
         <tr>
              <td>{{id}}</td>
-             <td>{{user.firstName}} {{user.lastName}}</td>
-             <td>{{status}}</td>
+             <td>{{this.user.firstName}} {{this.user.lastName}}</td>
+             <td>{{this.status}}</td>
              <td><img src="/upload/{{file}}"  width="100px" height="59px" ></td>
              
              <td>
@@ -30,7 +30,7 @@
                 <ul>
                       {{#each categories}}
                      <li>
-                         {{name}}
+                         {{this.name}}
                      </li>
                       {{/each}}  
                  </ul>

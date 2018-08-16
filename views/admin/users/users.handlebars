@@ -10,11 +10,13 @@
     <thead>
         <tr>
             <th>id</th>
+            <th>Comments</th>
             <th>status</th>
             <th>firstName</th>
             <th>lastName</th>
             <th>Email</th>
             <th>Date</th>
+            <th>delete</th>
             
     </tr>
     </thead>
@@ -23,12 +25,32 @@
          <tr> 
 
             <th scope="row">{{_id}}</th>
-            <td>status</td>
+            <td>
+                <ul>
+                    {{#each this.comments}}
+                        <li>{{comment}}</li>
+
+                    {{/each}}
+
+                </ul>
+
+            </td>
+            <td>{{status}}</td>
             <td>{{firstName}}</td>
             <td>{{lastName}}</td>
             <td>{{email}}</td>
             <td>{{generateTime date}} </td>
           
+             {{#deleteBtn statusUser=this.status }}
+             <td>
+             <form action="/admin/users/delete/{{_id}}?_method=DELETE " method="post">
+            
+                <input type="submit" value="DELETE">
+             
+             </form>
+            </td>
+            {{/deleteBtn}}
+
          </tr>
      </tbody>
      {{/each}}
