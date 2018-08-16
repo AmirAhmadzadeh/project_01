@@ -7,14 +7,15 @@ const express = require('express') ;
 const router = express.Router();
 const post  = require('./../../models/Post') ;
 const Comments = require('./../../models/Comment') ;
+const {userAuthenticate}= require('./../../helpers/authenticate') ;
 
 router.all('/*',(req,res,next)=>{
     
          req.app.locals.layout = 'admin' ; 
-         next() ; 
-}) ;
+         userAuthenticate(req,res,next);
+           
     
-
+    }) ;
 
 router.delete('/remove/:id',(req,res)=>{
 
@@ -97,7 +98,27 @@ router.get('/',(req,res)=>{
     });
   
 
-})
+}) ; 
+
+router.get('/myComments',(req,res)=>{
+    
+       Comments.find({user:req.user._id})
+        .populate({path:'user'})
+        .then((fcomments) => {
+           
+  
+          res.render('admin/comments/myComments',{comments:fcomments}) ;
+  
+       }).catch((err) => {
+        
+          console.log(' Error in finding Comments  in the admin Panel' + err) ;
+       
+      });
+    
+  
+  }) ; 
+
+
 
 module.exports = router ;
     

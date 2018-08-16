@@ -5,13 +5,10 @@ const express = require('express') ;
 const router = express.Router();
 const post = require('./../../models/Post') ;
 const cats = require('./../../models/Category');
-const exval = require('express-validator') ;
-const User = require('./../../models/User') ;
-const bcrypt = require('bcryptjs') ;
-const passport = require('passport') ;
-const LocalStrategy = require('passport-local').Strategy ;
-const {setStrategy,setConfig} =  require('./../../passport/pass')
 const Comment = require('./../../models/Comment') ;
+
+
+
 
 
 router.all('/*',(req,res,next)=>{
@@ -19,214 +16,103 @@ router.all('/*',(req,res,next)=>{
      
      req.app.locals.layout = 'home' ; 
      next() ; 
-     
 }) ;
 
 
-router.post('/Comment/:id',(req,res)=>{
-   post.findOne({_id:req.params.id}).then((fpost) => {
-       
-    const newComment =new Comment({
-        
-                 user:req.user ,
-                  
-                 comment:req.body.comment_body
-                 
-                 ,post:fpost   
-                 
-             }) ;
-        
-            newComment.save().then((result) => {
-                
-               console.log(' comment saved ') ; 
-               
-               fpost.comments.push(newComment) ;
-               
-               fpost.save()
-               
-               res.redirect(`/post/${req.params.id}`);
-               
-            }).catch((err) => {
-                
-                console.log('Error in saving comments' + err) ;
-        
-            });
-
+// home
+router.get('/',(req,res)=>{
     
+    const current = req.query.page || 1;
+ 
+    const prePage = 5; 
+ 
+    post.find({status : 'public'})
+        .limit(prePage)
+        .skip((prePage * current) - prePage)
+        .then((fposts) => {
+        
 
-   }).catch((err) => {
-       
-    console.log(`Error in finding post in Comment Router ${err}`)
-   });
+             post.count().then((postCounter) => {
+                 
 
+                cats.find({}).then((cats) => {
+                    
+                     res.render('home/home',{
+                         posts : fposts 
+                         ,
+                         cats :cats
+                         ,
+                         pages : Math.ceil(postCounter/prePage)
 
-
-}) ;
-
-
-
-router.get('/login',(req,res)=>{
-    req.app.locals.layout = '' ; 
-    res.render('home/login' ) ;
-
-}) ;
-
-
-passport.use('local',new LocalStrategy(
-    {usernameField : 'email'}, 
-   
-    (email,password,done)=>{
-        setStrategy(email,password,done) ;
-    }
-
- ));
-
-
+                         ,current : current 
+                       
+                        }) ;
+               
+                    }) ; 
 
 
-
-router.post('/login',(req,res,next)=>{
-    
+             }) ; 
 
 
-    req.checkBody('email').notEmpty()  ;
-    req.checkBody('email').isEmail()  ;
-    req.checkBody('password').notEmpty();
-
-    if(req.validationErrors()){
-
-        return res.send('validation Error') ;
-    }
-
-  //  console.log('Info seems good ') ;
-  setConfig() ;
   
-  passport.authenticate('local',{
-    
-             successRedirect : '/admin'
-            ,failureRedirect : '/login',
-           })(req,res,next) ;
-    
-}) ;
-
-
-
-
-router.get('/register',(req,res)=>{
-    
-    req.app.locals.layout = '' ;
-    res.render('home/register') ;
-
-
-}) ;
-
-
-router.post('/register',(req,res)=>{
-    
-   //res.send(`judkc`);
-
-   // check repetive  email address 
-
-    User.findOne({email : req.body.email}).then((user) => {
+        }).catch((err) => {
         
-        if(user) {
-            return res.send('the email address existed right now please check your email address')
-        }
-   
+        console.log('Error in getting Posts' + err) ;
+
     });
+}) ;
 
-   // validate info
-   const pass  = req.body.password; 
 
-   req.checkBody('firstName','first name cant be empty').notEmpty()  ;
+
+router.post('/search',(req,res)=>{
+
+  const search = req.body.search ;
+
+  const promises = [
  
-   req.checkBody('lastName','').notEmpty()  ; 
+    cats.find({}) ,
+    cats.findOne({name:search})
+        .populate('posts') 
+  ] ;
+
+
+  Promise.all(promises).then(([cats,fcat]) => {
   
-   req.checkBody('email','').notEmpty()  ; 
- 
-   req.checkBody('email','').isEmail()   ; 
- 
-   req.checkBody('password','').notEmpty()   ;
- 
-   req.checkBody('passwordConfirm','').notEmpty()  ; 
- 
-   req.checkBody('passwordConfirm','').equals(pass)  ; 
-  
-   const  errors = req.validationErrors();
-
-   if(errors){
-
-    console.log(` validation Error ` ) ;
     
-    req.app.locals.layout = '' ;
-  
-  
-    return res.render('home/register',{
-     
-          firstName :req.body.firstName ,
+    if(fcat) 
+    { 
         
-          lastName :req.body.lastName ,
-        
-          email :req.body.email ,
+     res.render('home/home',{cats:cats , posts:fcat.posts}) ;
 
-    }) ;
-    
-   }
 
- //  console.log('any err in validation informations') ;
+      }
+
+    else{
+
+     //flash
+        console.log('we dont have this category') ;
+        return res.redirect('/') ; 
   
-
-    // every  thing is ready to be best  
-   const newUser = new User({
-
-    firstName :req.body.firstName ,
-  
-    lastName :req.body.lastName ,
-  
-    email :req.body.email ,
-  
-    password :req.body.password ,
+    }  
 
 
-  }) ;
+
+  }).catch((err) => {
 
 
-   // hashing pass :
-   bcrypt.genSalt(10,(err,salt)=>{
-
-
-       bcrypt.hash(newUser.password,salt).then((hash) => {
-           
-            newUser.password = hash ;
-            
-            newUser.save().then((result) => {
-                
-            console.log('userSaved Successfully') ;
-       
-            res.redirect('/login') ;   
-
-            }).catch((err) => {
-
-                console.log('Error in saving user to database'  + err) ;
-                res.redirect('/register') ;
-
-            });
-
-       }).catch((err) => {
-          
-        
-     console.log( `Error in hashing password  ${err}` ) ;
-
-
-       }); 
-
-   }) ;
-
+    console.log(`Error in finding cat Posts ${err} `) ;
+ 
+ });
 
 }) ;
 
 
 
+
+
+
+
+// about page
 router.get('/about',(req,res)=>{
  
        const promises = [
@@ -242,25 +128,6 @@ router.get('/about',(req,res)=>{
 
 }) ;
 
-
-// home
-router.get('/',(req,res)=>{
-    
-    post.find({status : 'public'}).then((fposts) => {
-        cats.find({}).then((cats) => {
-            
-    
-             res.render('home/home',{posts : fposts ,cats :cats}) ;
-            
-        }) ;
-        
-    }).catch((err) => {
-        
-        console.log('Error in getting Posts' + err) ;
-
-    });
-    
-}) ;
 
 
 router.get('/post/:id',(req,res)=>{
@@ -278,7 +145,6 @@ router.get('/post/:id',(req,res)=>{
    Promise.all(promises).then(([cats,posts,post])=>{
    
       let num_cm = 0 ;  
- 
      
       if (post) {
           
@@ -296,19 +162,25 @@ router.get('/post/:id',(req,res)=>{
                     console.log(`Error in findin comment in the loop ingeting single post data ${err}`) ;
                 
                  });
+              
                }     
-      }
-       res.render('home/single',{cats:cats,posts : posts , post :post ,commment_counter:num_cm }) ; 
+        }
+       
+    setTimeout(function() {
+        res.render('home/single',{cats:cats,posts : posts , post :post ,commment_counter:num_cm }) ; 
+    }, 1000);
+
+
+
     }).catch(err=>{console.log('Error in bringing single Post '  + err)}) ;
+
 }) ;
 
 
+
+
+
+
+
+
 module.exports = router ;
-
-
-
-
-
-
-
-

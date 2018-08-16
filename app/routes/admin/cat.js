@@ -3,12 +3,15 @@ const express = require('express') ;
 const router = express.Router();
 const cat = require('./../../models/Category') ;
 const Post = require('./../../models/Post') ;
+const {userAuthenticate}= require('./../../helpers/authenticate') ;
+
 router.all('/*',(req,res,next)=>{
-
-     req.app.locals.layout = 'admin' ; 
-     next() ; 
+    
+         req.app.locals.layout = 'admin' ; 
+         userAuthenticate(req,res,next);
+           
+    
 }) ;
-
 
 
 router.get('/',(req,res)=>{
@@ -20,6 +23,16 @@ router.get('/',(req,res)=>{
 
 }) ;
 
+
+router.get('/userAccess',(req,res)=>{
+    
+       cat.find({}).then(fcats=>{
+    
+        res.render('admin/category/category_userAccess',{cats : fcats}) ;
+       }) ;
+    
+    }) ;
+    
 
 
 router.get('/create',(req,res)=>{
@@ -35,7 +48,6 @@ router.delete('/:id',(req,res)=>{
   
     cat.remove({ _id : req.params.id }).then((result) => {
         
-
         console.log(`category deleted successfuly `) ;
     
         Post.findOneAndUpdate({categories:req.params.id},{$pull:{categories:req.params.id}},

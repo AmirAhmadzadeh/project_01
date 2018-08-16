@@ -12,7 +12,6 @@ const userSchema = new Schema({
     type : String , required : true 
    },
 
-
    lastName: {
     
         type : String , required : true 
@@ -30,8 +29,15 @@ const userSchema = new Schema({
     , date :{
 
       type : Date , default:Date.now() 
-    }
+    },
+    status :{
 
+      type : String , default : "user" 
+    },
+    comments : [{
+
+      type :Schema.Types.ObjectId , ref : 'comments'
+    }] 
 
 }, { usePushEach :true } );
 

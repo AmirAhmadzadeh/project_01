@@ -7,14 +7,18 @@ const exvalidator = require('express-validator') ;
 const path = require('path') ;
 const fs = require('fs') ;
 const {fileUploadedDirection} = require('./../../helpers/upload-helper') ;
+const {userAuthenticate}= require('./../../helpers/authenticate') ;
+const user = require('./../../models/User') ;
+
 
 
 router.all('/*',(req,res,next)=>{
-
-     req.app.locals.layout = 'admin' ; 
-     next() ; 
-}) ;
-
+    
+         req.app.locals.layout = 'admin' ; 
+         userAuthenticate(req,res,next);
+           
+    
+    }) ;
 
 
 // get edit page  
@@ -249,7 +253,7 @@ router.post('/create',(req,res)=>{
         }) ;  
 
         newpost.save() ;
-      }) ;
+    }) ;
 
 
         
@@ -303,13 +307,14 @@ router.post('/create',(req,res)=>{
          }); 
 
     
-        
+         
 
      setTimeout(function() {
      
         newpost.save().then((result) => {
             
-               console.log('Created') ;
+                console.log('Created') ;
+               
                 res.redirect('/admin/posts/posts') ;
           
              }).catch((err) => {
@@ -352,7 +357,11 @@ router.get('/',(req,res)=>{
     
 router.get('/myposts',(req,res)=>{
     
-        res.render('admin/posts/posts') ;
+      post.find({user:req.user._id}).then((result) => {
+          res.render('admin/posts/myPosts' , {posts:result}) ;
+      }).catch((err) => {
+          
+      });
 }) ;
 
 
