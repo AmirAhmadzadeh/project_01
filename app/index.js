@@ -8,7 +8,7 @@ const mongoose = require('mongoose') ;
 const exhandlebars = require('express-handlebars') ;
 const bodyParser = require('body-parser') ;
 const expressValidator = require('express-validator');
-const {generateTime,select,check,content_summery_side,content_summery_posts,content,cm_counter,deleteBtn} = require('./helpers/helper-handlebars') ;
+const {generateTime,select,check,content_summery_side,content_summery_posts,content,cm_counter,deleteBtn,paginate} = require('./helpers/helper-handlebars') ;
 const expresUpload = require('express-fileupload') ;
 const methodOverRide =  require('method-override') ;
 const http = require('http') ;
@@ -131,7 +131,8 @@ module.exports = class Application {
        content_summery_posts: content_summery_posts,
        content : content,
        cm_counter :cm_counter , 
-       deleteBtn : deleteBtn
+       deleteBtn : deleteBtn,
+       paginate:paginate
      
     }}));
      app.set('view engine','handlebars') ;
