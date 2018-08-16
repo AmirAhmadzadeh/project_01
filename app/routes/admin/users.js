@@ -61,7 +61,8 @@ router.put('/yourInfo/edit/:id',(req,res)=>{
            fuser.lastName = req.body.lastName ;
            fuser.email =  req.body.email ; 
            fuser.save().then((result) => {
-   
+         
+                req.flash('success_msg',` ${result.firstName}  Edited info SuccessFully`) ;   
                 res.render('admin/users/userInfo',{user:fuser} ) ; 
                 
            }).catch((err) => {
@@ -80,7 +81,10 @@ router.put('/yourInfo/edit/:id',(req,res)=>{
 
 router.delete('/delete/:id',(req,res)=>{
  
-     
+
+
+
+   
    users.findOne({_id : req.params.id , status : 'user'})
         .populate('comments')  
         .then((fuser) => {
@@ -95,7 +99,9 @@ router.delete('/delete/:id',(req,res)=>{
                 });           
               }
                  
-             fuser.remove().then((result) => {
+             fuser.remove().then((deletedUser) => {
+           
+                req.flash('success_msg',` ${deletedUser.firstName}  deleted SuccessFully`) ;
                
                 res.redirect('/admin/users') ;
                

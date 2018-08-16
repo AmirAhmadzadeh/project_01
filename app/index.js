@@ -141,12 +141,26 @@ module.exports = class Application {
 
   setOtherMiddlewares(){
 
-
+     app.use(flash()) ;
       app.use((req,res,next)=>{
 
        res.locals.user = req.user || null ;
-        next() ;
+       res.locals.success_msg = req.flash('success_msg') ;                
+       res.locals.register_msg = req.flash('register_msg') ;
+       res.locals.register_msg = req.flash('error');
+       
+
+       next() ;
+    
+    
+    
+    
       }) ;
+
+
+
+
+
 
   } 
   

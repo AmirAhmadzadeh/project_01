@@ -39,7 +39,8 @@ router.delete('/remove/:id',(req,res)=>{
         }
      
       ) ;
-
+      req.flash('success_msg',`comment  deleted SuccessFully`) ;   
+      
       res.redirect('/admin/comments') ;  
 
      }).catch((err) => {

@@ -59,9 +59,22 @@ module.exports ={
          },
          deleteBtn:(options)=>{
   
-             if(options.hash.statusUser != 'admin') return options.fn(this) ;
+             if(options.hash.statusUser != 'admin') {return ` <td>
+                <form action="/admin/users/delete/${options.hash.user._id}?_method=DELETE " method="post">
+            
+                  <input type="submit" value="DELETE">
+             
+               </form>
+               </td>` ;
+            
+            }
              
              return null ;
+
+
+
+
+
          }
          ,paginate:(options)=>{
 

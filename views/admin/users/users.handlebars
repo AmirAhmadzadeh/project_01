@@ -4,7 +4,7 @@
 <h1>
     users :
 </h1>
-
+{{>admin/success_msg}}
 
 <table class="table">
     <thead>
@@ -41,14 +41,8 @@
             <td>{{email}}</td>
             <td>{{generateTime date}} </td>
           
-             {{#deleteBtn statusUser=this.status }}
-             <td>
-             <form action="/admin/users/delete/{{_id}}?_method=DELETE " method="post">
+             {{#deleteBtn statusUser=this.status  user=this}}
             
-                <input type="submit" value="DELETE">
-             
-             </form>
-            </td>
             {{/deleteBtn}}
 
          </tr>

@@ -31,7 +31,8 @@ router.post('/',(req,res)=>{
     User.findOne({email : req.body.email}).then((user) => {
         
         if(user) {
-            return res.send('the email address existed right now please check your email address')
+            req.flash('register_msg','the email address existed right now please check your email address') ;
+            return res.redirect('/register') ;
         }
    
     });
@@ -58,7 +59,7 @@ router.post('/',(req,res)=>{
    if(errors){
 
     console.log(` validation Error ` ) ;
-    
+    req.flash('register_msg','validation Error youre info doesn\' seem Good      ') ;
     req.app.locals.layout = '' ;
   
   

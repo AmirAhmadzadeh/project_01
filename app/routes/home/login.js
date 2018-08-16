@@ -32,15 +32,14 @@ passport.use('local',new LocalStrategy(
 
 router.post('/',(req,res,next)=>{
     
-
-
     req.checkBody('email').notEmpty()  ;
     req.checkBody('email').isEmail()  ;
     req.checkBody('password').notEmpty();
 
     if(req.validationErrors()){
 
-        return res.send('validation Error') ;
+        req.flash('register_msg','the email address existed right now please check your email address') ;
+        return res.redirect('/login') ;
     }
 
   setConfig() ;
@@ -49,6 +48,7 @@ router.post('/',(req,res,next)=>{
     
              successRedirect : '/admin'
             ,failureRedirect : '/login',
+            failureFlash:true
            })(req,res,next) ;
     
 }) ;

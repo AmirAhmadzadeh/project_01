@@ -27,7 +27,7 @@ router.get('/',(req,res)=>{
 router.get('/userAccess',(req,res)=>{
     
        cat.find({}).then(fcats=>{
-    
+       
         res.render('admin/category/category_userAccess',{cats : fcats}) ;
        }) ;
     
@@ -48,7 +48,7 @@ router.delete('/:id',(req,res)=>{
   
     cat.remove({ _id : req.params.id }).then((result) => {
         
-        console.log(`category deleted successfuly `) ;
+      //  console.log(`category deleted successfuly `) ;
     
         Post.findOneAndUpdate({categories:req.params.id},{$pull:{categories:req.params.id}},
             
@@ -58,6 +58,7 @@ router.delete('/:id',(req,res)=>{
             
                 }) ;
 
+         req.flash('success_msg',`category deleted SuccessFully`) ;                   
          res.redirect('/admin/categories')   ;
 
         }).catch((err) => {
@@ -85,9 +86,12 @@ router.post('/create',(req,res)=>{
 
 
        newcat.save().then((result) => {
-           
+          
+        
+           req.flash('success_msg',`category ${result.name}  Created SuccessFully`) ;                    
             res.redirect("/admin/categories") ;
-       }).catch((err) => {
+     
+        }).catch((err) => {
            console.log('Error in saving category') ;
        }); ;
     

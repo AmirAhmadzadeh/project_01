@@ -141,13 +141,13 @@ router.put('/edit/:id',(req,res)=>{
 
         setTimeout(function() {
            
-                fpost.save().then((result) => {
+                fpost.save().then((savedPost) => {
                     
-                    post.find({}).then(posts=>{
                     
+                    req.flash('success_msg',`post ${savedPost.title}  Edited SuccessFully`) ;
                         res.redirect('/admin/posts') ; 
                     
-                    }) ;   
+              
         
                 }).catch((err) => {
                     
@@ -197,9 +197,10 @@ router.delete('/delete/:id',(req,res)=>{
            
             }               
 
-            fpost.remove().then((result) => {
+            fpost.remove().then((deletedPost) => {
                 
                  console.log('post deleted') ;
+                 req.flash('success_msg',`post ${deletedPost.title}  deleted SuccessFully`) ;
                  res.redirect('/admin/posts') ;
             }).catch((err) => {
              
@@ -311,10 +312,10 @@ router.post('/create',(req,res)=>{
 
      setTimeout(function() {
      
-        newpost.save().then((result) => {
+        newpost.save().then((savedPost) => {
             
                 console.log('Created') ;
-               
+                req.flash('success_msg',`post ${savedPost.title}  created SuccessFully`) ;
                 res.redirect('/admin/posts/posts') ;
           
              }).catch((err) => {
