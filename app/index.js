@@ -8,7 +8,7 @@ const mongoose = require('mongoose') ;
 const exhandlebars = require('express-handlebars') ;
 const bodyParser = require('body-parser') ;
 const expressValidator = require('express-validator');
-const {generateTime,select,check,content_summery_side,content_summery_posts,content,cm_counter} = require('./helpers/helper-handlebars') ;
+const {generateTime,select,check,content_summery_side,content_summery_posts,content,cm_counter,deleteBtn} = require('./helpers/helper-handlebars') ;
 const expresUpload = require('express-fileupload') ;
 const methodOverRide =  require('method-override') ;
 const http = require('http') ;
@@ -130,7 +130,8 @@ module.exports = class Application {
        content_summery_side : content_summery_side ,
        content_summery_posts: content_summery_posts,
        content : content,
-       cm_counter :cm_counter 
+       cm_counter :cm_counter , 
+       deleteBtn : deleteBtn
      
     }}));
      app.set('view engine','handlebars') ;
@@ -150,18 +151,27 @@ module.exports = class Application {
   
   setrouteMiddlewares(){
 
-    // router middlewares  : 
+    // home middlewares  : 
     app.use('/',require('./routes/home/index'));
     app.use('/catPosts',require('./routes/home/category')) ;
+    app.use('/register',require('./routes/home/register'));
+    app.use('/Comment',require('./routes/home/comment')) ; 
+    app.use('/login',require('./routes/home/login')) ; 
+    app.use('/logout',require('./routes/home/logout')) ;
+
+    
+    // admin middlewares
     app.use('/admin',require('./routes/admin/index'));
     app.use('/admin/posts',require('./routes/admin/posts'));    
     app.use('/admin/categories',require('./routes/admin/cat'))
     app.use('/admin/comments',require('./routes/admin/comments')) ;
-
-
-
-
+    app.use('/admin/users',require('./routes/admin/users')) ;
+    
   }
+
+
+
+
 
 }
 

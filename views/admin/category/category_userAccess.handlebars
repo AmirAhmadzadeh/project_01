@@ -6,9 +6,7 @@
         <th>id</th>
         <th>name</th>
         <th>view</th>
-        <th>
-            delete
-        </th>
+      
     </tr>
 
     
@@ -16,17 +14,9 @@
     <tr>
         <td>{{_id}}</td>
         <td>{{name}}</td>
-       
          <td>
              <a href="/catPosts/{{_id}}" class="btn btn-primary"> view posts</a>
          </td>
-         <td>
-        <form action="/admin/categories/{{_id}}?_method=DELETE" method="post">
-         <input type="submit" value="Delete" class="btn btn-danger">
-        </form>
-        </td>    
     </tr>
     {{/each}}
 </table>
-
-<a href="/admin/categories/create" class="btn">createcat</a>
