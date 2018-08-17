@@ -17,7 +17,7 @@ module.exports ={
         ,
        check : (cats)=>{
   
-         console.log(cats) ;
+        // console.log(cats) ;
         
         },
 
@@ -72,23 +72,10 @@ module.exports ={
              return null ;
 
 
-
-
-
          }
          ,paginate:(options)=>{
 
-
-     /*  
-          <li><a href="#">&lt;</a></li>
-          
-           <li class="active"><a href="?page=1">1</a></li>+
-           
-          <li><a href="#">&gt;</a></li>     
-           
-      */
-
-         console.log(options.hash.current , options.hash.pages) ;
+      //  console.log(options.hash.current , options.hash.pages) ;
 
       
          let pages =  Number(options.hash.pages) ;
@@ -103,10 +90,7 @@ module.exports ={
  
              output += `<li class="page-item" active><a class="page-link" href="/?page=1">&lt</a> </li>` ;
              
-         }
- 
-         
-                     
+         }          
  
          let i = ((currentPage > 5) ? (currentPage - 4) : 1) ;
  
@@ -144,15 +128,15 @@ module.exports ={
    
           }else{
  
-             output += `<li class="page-item"><a class="page-link" href="/?page=${pages}">&gt;</a> </li>` ;
-             
+             output += `<li class="page-item"><a class="page-link" href="/?page=${pages}">&gt;</a> </li>` ;  
           }
      
-     
+
          return output  ; 
      
-
          }
+
+         
 
 
 }

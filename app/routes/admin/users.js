@@ -32,28 +32,19 @@ router.get('/',(req,res)=>{
 }) ;
 
 
-
-
 router.get('/yourInfo',(req,res)=>{
 
 res.render('admin/users/userInfo')  ; 
-
-
 
 }) ;
 
 router.get('/yourInfo/edit',(req,res)=>{
   
-
   res.render('admin/users/updateInfo') ; 
   
-
-  
-  }) ;
+}) ;
   
 router.put('/yourInfo/edit/:id',(req,res)=>{
-
-
 
  users.findOne({_id : req.params.id}).then((fuser) => {
    
@@ -81,10 +72,6 @@ router.put('/yourInfo/edit/:id',(req,res)=>{
 
 router.delete('/delete/:id',(req,res)=>{
  
-
-
-
-   
    users.findOne({_id : req.params.id , status : 'user'})
         .populate('comments')  
         .then((fuser) => {

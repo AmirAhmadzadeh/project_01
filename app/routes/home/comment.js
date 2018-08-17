@@ -14,9 +14,9 @@ router.all('/*',(req,res,next)=>{
 
 
 
-router.post('/:id',(req,res)=>{
+router.post('/:slug',(req,res)=>{
     
-      post.findOne({_id:req.params.id}).then((fpost) => {
+      post.findOne({slug:req.params.slug}).then((fpost) => {
          
       const newComment =new Comment({
           
@@ -38,15 +38,13 @@ router.post('/:id',(req,res)=>{
                  
                  fpost.save()
                  
-                 res.redirect(`/post/${req.params.id}`);
+                 res.redirect(`/post/${req.params.slug}`);
                  
               }).catch((err) => {
                   
                   console.log('Error in saving comments' + err) ;
           
               });
-  
-      
   
      }).catch((err) => {
          

@@ -23,15 +23,16 @@ router.all('/*',(req,res,next)=>{
 
 // get edit page  
 
-router.get('/edit/:id',(req,res)=>{
+router.get('/edit/:slug',(req,res)=>{
 
-    post.findOne({_id : req.params.id})
+    post.findOne({ slug: req.params.slug})
          .populate('categories')
-         .then((post) => {
-        category.find({}).then((cats) => {
+         .then((fpost) => {
+      
+         category.find({}).then((cats) => {
         
         
-            res.render('admin/posts/edit',{ post:post , cats:cats }) ;
+            res.render('admin/posts/edit',{ post:fpost , cats:cats }) ;
         
         }) ;
 
@@ -48,14 +49,14 @@ router.get('/edit/:id',(req,res)=>{
 
 
 // update post
-router.put('/edit/:id',(req,res)=>{
+router.put('/edit/:slug',(req,res)=>{
 
 
         
-    post.findOne({_id : req.params.id}).then((fpost) => {
+    post.findOne({slug : req.params.slug}).then((fpost) => {
      
      
-        console.log(fpost.categories) ;
+      //  console.log(fpost.categories) ;
        
         fpost.categories.forEach(cat=>{
             

@@ -148,20 +148,11 @@ module.exports = class Application {
        res.locals.success_msg = req.flash('success_msg') ;                
        res.locals.register_msg = req.flash('register_msg') ;
        res.locals.register_msg = req.flash('error');
-       
-
+      
        next() ;
     
-    
-    
-    
+
       }) ;
-
-
-
-
-
-
   } 
   
   setrouteMiddlewares(){

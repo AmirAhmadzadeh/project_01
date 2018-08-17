@@ -130,13 +130,13 @@ router.get('/about',(req,res)=>{
 
 
 
-router.get('/post/:id',(req,res)=>{
+router.get('/post/:slug',(req,res)=>{
    
      const promises = [
         cats.find(),
         post.find(),
         post
-        .findOne({_id : req.params.id})
+        .findOne({slug : req.params.slug})
         .populate({path:'comments', populate:{path:'user'}})
         .populate('user')
 
