@@ -22,7 +22,6 @@ const app = express() ;
 
 module.exports = class Application {
 
-
    constructor(){
 
       this.setexpress()  ;
@@ -47,8 +46,7 @@ module.exports = class Application {
         }
       }) ; 
 
-   
-
+  
    } 
 
    setMongo(){
